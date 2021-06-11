@@ -29,14 +29,14 @@ import (
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/argoproj/argo/errors"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/util"
-	"github.com/argoproj/argo/util/archive"
-	"github.com/argoproj/argo/util/retry"
-	artifact "github.com/argoproj/argo/workflow/artifacts"
-	"github.com/argoproj/argo/workflow/common"
-	os_specific "github.com/argoproj/argo/workflow/executor/os-specific"
+	"github.com/wyzksp/workflow/errors"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/util"
+	"github.com/wyzksp/workflow/util/archive"
+	"github.com/wyzksp/workflow/util/retry"
+	artifact "github.com/wyzksp/workflow/workflow/artifacts"
+	"github.com/wyzksp/workflow/workflow/common"
+	os_specific "github.com/wyzksp/workflow/workflow/executor/os-specific"
 )
 
 // ExecutorRetry is a retry backoff settings for WorkflowExecutor

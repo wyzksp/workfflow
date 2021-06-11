@@ -31,27 +31,27 @@ import (
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/yaml"
 
-	"github.com/argoproj/argo/config"
-	"github.com/argoproj/argo/errors"
-	"github.com/argoproj/argo/pkg/apis/workflow"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
-	"github.com/argoproj/argo/util"
-	envutil "github.com/argoproj/argo/util/env"
-	errorsutil "github.com/argoproj/argo/util/errors"
-	"github.com/argoproj/argo/util/intstr"
-	"github.com/argoproj/argo/util/resource"
-	"github.com/argoproj/argo/util/retry"
-	"github.com/argoproj/argo/workflow/common"
-	controllercache "github.com/argoproj/argo/workflow/controller/cache"
-	"github.com/argoproj/argo/workflow/controller/estimation"
-	"github.com/argoproj/argo/workflow/controller/indexes"
-	"github.com/argoproj/argo/workflow/metrics"
-	"github.com/argoproj/argo/workflow/progress"
-	argosync "github.com/argoproj/argo/workflow/sync"
-	"github.com/argoproj/argo/workflow/templateresolution"
-	wfutil "github.com/argoproj/argo/workflow/util"
-	"github.com/argoproj/argo/workflow/validate"
+	"github.com/wyzksp/workflow/config"
+	"github.com/wyzksp/workflow/errors"
+	"github.com/wyzksp/workflow/pkg/apis/workflow"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/util"
+	envutil "github.com/wyzksp/workflow/util/env"
+	errorsutil "github.com/wyzksp/workflow/util/errors"
+	"github.com/wyzksp/workflow/util/intstr"
+	"github.com/wyzksp/workflow/util/resource"
+	"github.com/wyzksp/workflow/util/retry"
+	"github.com/wyzksp/workflow/workflow/common"
+	controllercache "github.com/wyzksp/workflow/workflow/controller/cache"
+	"github.com/wyzksp/workflow/workflow/controller/estimation"
+	"github.com/wyzksp/workflow/workflow/controller/indexes"
+	"github.com/wyzksp/workflow/workflow/metrics"
+	"github.com/wyzksp/workflow/workflow/progress"
+	argosync "github.com/wyzksp/workflow/workflow/sync"
+	"github.com/wyzksp/workflow/workflow/templateresolution"
+	wfutil "github.com/wyzksp/workflow/workflow/util"
+	"github.com/wyzksp/workflow/workflow/validate"
 )
 
 // wfOperationCtx is the context for evaluation and operation of a single workflow
@@ -598,7 +598,7 @@ func (woc *wfOperationCtx) writeBackToInformer() error {
 }
 
 // persistWorkflowSizeLimitErr will fail a the workflow with an error when we hit the resource size limit
-// See https://github.com/argoproj/argo/issues/913
+// See https://github.com/wyzksp/workflow/issues/913
 func (woc *wfOperationCtx) persistWorkflowSizeLimitErr(wfClient v1alpha1.WorkflowInterface, err error) {
 	woc.wf = woc.orig.DeepCopy()
 	woc.markWorkflowError(err)
@@ -644,7 +644,7 @@ func (woc *wfOperationCtx) reapplyUpdate(wfClient v1alpha1.WorkflowInterface, no
 		// There is something about having informer indexers (introduced in v2.12) that means we are more likely to operate on the
 		// previous version of the workflow. This means under high load, a previously successful workflow could
 		// be operated on again. This can error (e.g. if any pod was deleted as part of clean-up). This check prevents that.
-		// https://github.com/argoproj/argo/issues/4798
+		// https://github.com/wyzksp/workflow/issues/4798
 		if currWf.Status.Fulfilled() {
 			return nil, fmt.Errorf("must never update completed workflows")
 		}
@@ -1244,7 +1244,7 @@ func inferFailedReason(pod *apiv1.Pod) (wfv1.NodePhase, string) {
 	// init, main (annotated), main (exit code), wait, sidecars
 	for _, ctr := range pod.Status.InitContainerStatuses {
 		// Virtual Kubelet environment will not set the terminate on waiting container
-		// https://github.com/argoproj/argo/issues/3879
+		// https://github.com/wyzksp/workflow/issues/3879
 		// https://github.com/virtual-kubelet/virtual-kubelet/blob/7f2a02291530d2df14905702e6d51500dd57640a/node/sync.go#L195-L208
 		if ctr.State.Waiting != nil {
 			return wfv1.NodeError, fmt.Sprintf("Pod failed before %s container starts", ctr.Name)
@@ -1270,7 +1270,7 @@ func inferFailedReason(pod *apiv1.Pod) (wfv1.NodePhase, string) {
 	failMessages := make(map[string]string)
 	for _, ctr := range pod.Status.ContainerStatuses {
 		// Virtual Kubelet environment will not set the terminate on waiting container
-		// https://github.com/argoproj/argo/issues/3879
+		// https://github.com/wyzksp/workflow/issues/3879
 		// https://github.com/virtual-kubelet/virtual-kubelet/blob/7f2a02291530d2df14905702e6d51500dd57640a/node/sync.go#L195-L208
 
 		if ctr.State.Waiting != nil {

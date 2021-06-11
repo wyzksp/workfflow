@@ -3,17 +3,17 @@ package executor
 import (
 	"fmt"
 
-	"github.com/argoproj/argo/workflow/artifacts/gcs"
-	"github.com/argoproj/argo/workflow/artifacts/oss"
+	"github.com/wyzksp/workflow/workflow/artifacts/gcs"
+	"github.com/wyzksp/workflow/workflow/artifacts/oss"
 
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/workflow/artifacts/artifactory"
-	"github.com/argoproj/argo/workflow/artifacts/git"
-	"github.com/argoproj/argo/workflow/artifacts/hdfs"
-	"github.com/argoproj/argo/workflow/artifacts/http"
-	"github.com/argoproj/argo/workflow/artifacts/raw"
-	"github.com/argoproj/argo/workflow/artifacts/resource"
-	"github.com/argoproj/argo/workflow/artifacts/s3"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/workflow/artifacts/artifactory"
+	"github.com/wyzksp/workflow/workflow/artifacts/git"
+	"github.com/wyzksp/workflow/workflow/artifacts/hdfs"
+	"github.com/wyzksp/workflow/workflow/artifacts/http"
+	"github.com/wyzksp/workflow/workflow/artifacts/raw"
+	"github.com/wyzksp/workflow/workflow/artifacts/resource"
+	"github.com/wyzksp/workflow/workflow/artifacts/s3"
 )
 
 // ArtifactDriver is the interface for loading and saving of artifacts

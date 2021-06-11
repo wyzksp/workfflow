@@ -18,9 +18,9 @@ import (
 	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/tools/clientcmd"
 
-	wfclientset "github.com/argoproj/argo/pkg/client/clientset/versioned"
-	cmdutil "github.com/argoproj/argo/util/cmd"
-	"github.com/argoproj/argo/workflow/controller"
+	wfclientset "github.com/wyzksp/workflow/pkg/client/clientset/versioned"
+	cmdutil "github.com/wyzksp/workflow/util/cmd"
+	"github.com/wyzksp/workflow/workflow/controller"
 )
 
 const (

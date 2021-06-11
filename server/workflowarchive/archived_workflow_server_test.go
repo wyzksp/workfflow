@@ -16,11 +16,11 @@ import (
 	kubefake "k8s.io/client-go/kubernetes/fake"
 	k8stesting "k8s.io/client-go/testing"
 
-	"github.com/argoproj/argo/persist/sqldb/mocks"
-	workflowarchivepkg "github.com/argoproj/argo/pkg/apiclient/workflowarchive"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	argofake "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
-	"github.com/argoproj/argo/server/auth"
+	"github.com/wyzksp/workflow/persist/sqldb/mocks"
+	workflowarchivepkg "github.com/wyzksp/workflow/pkg/apiclient/workflowarchive"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	argofake "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	"github.com/wyzksp/workflow/server/auth"
 )
 
 func Test_archivedWorkflowServer(t *testing.T) {

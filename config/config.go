@@ -7,7 +7,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
 
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
 )
 
 var EmptyConfigFunc = func() interface{} { return &Config{} }

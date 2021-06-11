@@ -9,10 +9,10 @@ import (
 	"gopkg.in/jcmturner/gokrb5.v5/credentials"
 	"gopkg.in/jcmturner/gokrb5.v5/keytab"
 
-	"github.com/argoproj/argo/errors"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/util"
-	"github.com/argoproj/argo/workflow/artifacts/resource"
+	"github.com/wyzksp/workflow/errors"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/util"
+	"github.com/wyzksp/workflow/workflow/artifacts/resource"
 )
 
 // ArtifactDriver is a driver for HDFS

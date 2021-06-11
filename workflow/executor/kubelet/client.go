@@ -19,9 +19,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 
-	"github.com/argoproj/argo/errors"
-	"github.com/argoproj/argo/workflow/common"
-	execcommon "github.com/argoproj/argo/workflow/executor/common"
+	"github.com/wyzksp/workflow/errors"
+	"github.com/wyzksp/workflow/workflow/common"
+	execcommon "github.com/wyzksp/workflow/workflow/executor/common"
 )
 
 const (

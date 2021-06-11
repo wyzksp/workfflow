@@ -5,14 +5,14 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"github.com/argoproj/argo"
-	"github.com/argoproj/argo/cmd/argo/commands/clustertemplate"
+	"github.com/wyzksp/workflow"
+	"github.com/wyzksp/workflow/cmd/argo/commands/clustertemplate"
 
-	"github.com/argoproj/argo/cmd/argo/commands/archive"
-	"github.com/argoproj/argo/cmd/argo/commands/auth"
-	"github.com/argoproj/argo/cmd/argo/commands/client"
-	"github.com/argoproj/argo/cmd/argo/commands/cron"
-	"github.com/argoproj/argo/cmd/argo/commands/template"
+	"github.com/wyzksp/workflow/cmd/argo/commands/archive"
+	"github.com/wyzksp/workflow/cmd/argo/commands/auth"
+	"github.com/wyzksp/workflow/cmd/argo/commands/client"
+	"github.com/wyzksp/workflow/cmd/argo/commands/cron"
+	"github.com/wyzksp/workflow/cmd/argo/commands/template"
 )
 
 const (

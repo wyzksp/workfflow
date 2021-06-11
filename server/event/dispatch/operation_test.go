@@ -11,12 +11,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/tools/record"
 
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
-	"github.com/argoproj/argo/server/auth"
-	"github.com/argoproj/argo/server/auth/types"
-	"github.com/argoproj/argo/util/instanceid"
-	"github.com/argoproj/argo/workflow/common"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	"github.com/wyzksp/workflow/server/auth"
+	"github.com/wyzksp/workflow/server/auth/types"
+	"github.com/wyzksp/workflow/util/instanceid"
+	"github.com/wyzksp/workflow/workflow/common"
 )
 
 func Test_metaData(t *testing.T) {

@@ -5,8 +5,8 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/argoproj/argo/util/labels"
-	"github.com/argoproj/argo/workflow/common"
+	"github.com/wyzksp/workflow/util/labels"
+	"github.com/wyzksp/workflow/workflow/common"
 )
 
 type Service interface {

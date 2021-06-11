@@ -5,8 +5,8 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/client-go/tools/cache"
 
-	"github.com/argoproj/argo/workflow/common"
-	"github.com/argoproj/argo/workflow/util"
+	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/wyzksp/workflow/workflow/util"
 )
 
 func MetaWorkflowIndexFunc(obj interface{}) ([]string, error) {

@@ -8,11 +8,11 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/yaml"
 
-	"github.com/argoproj/argo/config"
-	"github.com/argoproj/argo/errors"
-	"github.com/argoproj/argo/persist/sqldb"
-	"github.com/argoproj/argo/util/instanceid"
-	"github.com/argoproj/argo/workflow/hydrator"
+	"github.com/wyzksp/workflow/config"
+	"github.com/wyzksp/workflow/errors"
+	"github.com/wyzksp/workflow/persist/sqldb"
+	"github.com/wyzksp/workflow/util/instanceid"
+	"github.com/wyzksp/workflow/workflow/hydrator"
 )
 
 func (wfc *WorkflowController) updateConfig(v interface{}) error {

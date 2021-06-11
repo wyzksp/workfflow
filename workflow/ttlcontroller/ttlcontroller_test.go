@@ -11,10 +11,10 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	fakewfclientset "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
-	"github.com/argoproj/argo/test"
-	"github.com/argoproj/argo/workflow/util"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	fakewfclientset "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	"github.com/wyzksp/workflow/test"
+	"github.com/wyzksp/workflow/workflow/util"
 )
 
 var completedWf = `

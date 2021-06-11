@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"testing"
 
-	artifact "github.com/argoproj/argo/workflow/artifacts"
-	"github.com/argoproj/argo/workflow/artifacts/resource"
+	artifact "github.com/wyzksp/workflow/workflow/artifacts"
+	"github.com/wyzksp/workflow/workflow/artifacts/resource"
 
 	"github.com/stretchr/testify/assert"
 	testhttp "github.com/stretchr/testify/http"
@@ -17,14 +17,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	kubefake "k8s.io/client-go/kubernetes/fake"
 
-	"github.com/argoproj/argo/persist/sqldb/mocks"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	fakewfv1 "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
-	"github.com/argoproj/argo/server/auth"
-	authmocks "github.com/argoproj/argo/server/auth/mocks"
-	"github.com/argoproj/argo/util/instanceid"
-	"github.com/argoproj/argo/workflow/common"
-	hydratorfake "github.com/argoproj/argo/workflow/hydrator/fake"
+	"github.com/wyzksp/workflow/persist/sqldb/mocks"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	fakewfv1 "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	"github.com/wyzksp/workflow/server/auth"
+	authmocks "github.com/wyzksp/workflow/server/auth/mocks"
+	"github.com/wyzksp/workflow/util/instanceid"
+	"github.com/wyzksp/workflow/workflow/common"
+	hydratorfake "github.com/wyzksp/workflow/workflow/hydrator/fake"
 )
 
 func mustParse(text string) *url.URL {

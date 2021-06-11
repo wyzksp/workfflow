@@ -8,12 +8,12 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/client-go/tools/cache"
 
-	"github.com/argoproj/argo/persist/sqldb"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/workflow/common"
-	"github.com/argoproj/argo/workflow/controller/indexes"
-	"github.com/argoproj/argo/workflow/hydrator"
-	"github.com/argoproj/argo/workflow/util"
+	"github.com/wyzksp/workflow/persist/sqldb"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/wyzksp/workflow/workflow/controller/indexes"
+	"github.com/wyzksp/workflow/workflow/hydrator"
+	"github.com/wyzksp/workflow/workflow/util"
 )
 
 type EstimatorFactory interface {

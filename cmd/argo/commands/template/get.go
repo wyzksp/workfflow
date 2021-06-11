@@ -10,9 +10,9 @@ import (
 
 	"github.com/argoproj/pkg/humanize"
 
-	"github.com/argoproj/argo/cmd/argo/commands/client"
-	workflowtemplatepkg "github.com/argoproj/argo/pkg/apiclient/workflowtemplate"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/cmd/argo/commands/client"
+	workflowtemplatepkg "github.com/wyzksp/workflow/pkg/apiclient/workflowtemplate"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
 )
 
 func NewGetCommand() *cobra.Command {

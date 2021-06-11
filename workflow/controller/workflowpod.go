@@ -18,13 +18,13 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/utils/pointer"
 
-	"github.com/argoproj/argo/errors"
-	"github.com/argoproj/argo/pkg/apis/workflow"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	errorsutil "github.com/argoproj/argo/util/errors"
-	"github.com/argoproj/argo/util/intstr"
-	"github.com/argoproj/argo/workflow/common"
-	"github.com/argoproj/argo/workflow/util"
+	"github.com/wyzksp/workflow/errors"
+	"github.com/wyzksp/workflow/pkg/apis/workflow"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	errorsutil "github.com/wyzksp/workflow/util/errors"
+	"github.com/wyzksp/workflow/util/intstr"
+	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/wyzksp/workflow/workflow/util"
 )
 
 // Reusable k8s pod spec portions used in workflow pods

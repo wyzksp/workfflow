@@ -3,7 +3,7 @@ package apiclient
 import (
 	"context"
 
-	workflowpkg "github.com/argoproj/argo/pkg/apiclient/workflow"
+	workflowpkg "github.com/wyzksp/workflow/pkg/apiclient/workflow"
 )
 
 type logsIntermediary struct {

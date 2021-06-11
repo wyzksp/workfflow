@@ -5,15 +5,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/argoproj/argo/workflow/common"
+	"github.com/wyzksp/workflow/workflow/common"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/argoproj/argo/pkg/apiclient/workflow"
-	workflowmocks "github.com/argoproj/argo/pkg/apiclient/workflow/mocks"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/apiclient/workflow"
+	workflowmocks "github.com/wyzksp/workflow/pkg/apiclient/workflow/mocks"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
 )
 
 func Test_listWorkflows(t *testing.T) {

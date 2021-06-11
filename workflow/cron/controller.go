@@ -23,13 +23,13 @@ import (
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
 
-	"github.com/argoproj/argo/pkg/apis/workflow"
-	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/pkg/client/clientset/versioned"
-	"github.com/argoproj/argo/workflow/common"
-	"github.com/argoproj/argo/workflow/events"
-	"github.com/argoproj/argo/workflow/metrics"
-	"github.com/argoproj/argo/workflow/util"
+	"github.com/wyzksp/workflow/pkg/apis/workflow"
+	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/client/clientset/versioned"
+	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/wyzksp/workflow/workflow/events"
+	"github.com/wyzksp/workflow/workflow/metrics"
+	"github.com/wyzksp/workflow/workflow/util"
 )
 
 // Controller is a controller for cron workflows

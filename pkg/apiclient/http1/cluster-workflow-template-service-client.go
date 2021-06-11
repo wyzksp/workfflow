@@ -5,8 +5,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/argoproj/argo/pkg/apiclient/clusterworkflowtemplate"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/apiclient/clusterworkflowtemplate"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
 )
 
 type ClusterWorkflowTemplateServiceClient = Facade

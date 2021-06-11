@@ -7,8 +7,8 @@ import (
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/fields"
 
-	"github.com/argoproj/argo/cmd/argo/commands/client"
-	workflowpkg "github.com/argoproj/argo/pkg/apiclient/workflow"
+	"github.com/wyzksp/workflow/cmd/argo/commands/client"
+	workflowpkg "github.com/wyzksp/workflow/pkg/apiclient/workflow"
 )
 
 type resumeOps struct {

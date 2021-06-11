@@ -7,12 +7,12 @@ import (
 	"golang.org/x/net/context"
 	fakekube "k8s.io/client-go/kubernetes/fake"
 
-	eventpkg "github.com/argoproj/argo/pkg/apiclient/event"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
-	"github.com/argoproj/argo/server/auth"
-	"github.com/argoproj/argo/util/instanceid"
-	"github.com/argoproj/argo/workflow/events"
+	eventpkg "github.com/wyzksp/workflow/pkg/apiclient/event"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	"github.com/wyzksp/workflow/server/auth"
+	"github.com/wyzksp/workflow/util/instanceid"
+	"github.com/wyzksp/workflow/workflow/events"
 )
 
 func TestController(t *testing.T) {

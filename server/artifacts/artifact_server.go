@@ -17,12 +17,12 @@ import (
 	"google.golang.org/grpc/status"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/argoproj/argo/persist/sqldb"
-	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
-	"github.com/argoproj/argo/server/auth"
-	"github.com/argoproj/argo/util/instanceid"
-	artifact "github.com/argoproj/argo/workflow/artifacts"
-	"github.com/argoproj/argo/workflow/hydrator"
+	"github.com/wyzksp/workflow/persist/sqldb"
+	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/wyzksp/workflow/server/auth"
+	"github.com/wyzksp/workflow/util/instanceid"
+	artifact "github.com/wyzksp/workflow/workflow/artifacts"
+	"github.com/wyzksp/workflow/workflow/hydrator"
 )
 
 type ArtifactServer struct {
