@@ -4,7 +4,7 @@
 # Also used as the image in CI jobs so needs all dependencies
 ####################################################################################################
 FROM golang:1.13.4 as builder
-
+ENV GOPROXY=https://goproxy.cn
 ARG IMAGE_OS=linux
 
 RUN apt-get update && apt-get --no-install-recommends install -y \
@@ -81,8 +81,10 @@ FROM node:14.0.0 as argo-ui
 ADD ["ui", "ui"]
 ADD ["api", "api"]
 
-RUN JOBS=max yarn --cwd ui install --network-timeout 1000000
-RUN JOBS=max yarn --cwd ui build
+#RUN JOBS=max yarn --cwd ui install --network-timeout 1000000
+#RUN JOBS=max yarn --cwd ui build
+RUN yarn  --cwd ui install
+RUN yarn  --cwd ui build
 
 ####################################################################################################
 # Argo Build stage which performs the actual build of Argo binaries
@@ -98,12 +100,12 @@ COPY . .
 RUN git rev-parse HEAD
 
 # controller image
-RUN . hack/image_arch.sh && make dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH}
-RUN . hack/image_arch.sh && ./dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH} version | grep clean
+#RUN . hack/image_arch.sh && make dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH}
+#RUN . hack/image_arch.sh && ./dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH} version | grep clean
 
 # executor image
-RUN . hack/image_arch.sh && make dist/argoexec-${IMAGE_OS}-${IMAGE_ARCH}
-RUN . hack/image_arch.sh && ./dist/argoexec-${IMAGE_OS}-${IMAGE_ARCH} version | grep clean
+#RUN . hack/image_arch.sh && make dist/argoexec-${IMAGE_OS}-${IMAGE_ARCH}
+#RUN . hack/image_arch.sh && ./dist/argoexec-${IMAGE_OS}-${IMAGE_ARCH} version | grep clean
 
 # cli image
 RUN mkdir -p ui/dist
@@ -112,26 +114,26 @@ COPY --from=argo-ui ui/dist/app ui/dist/app
 RUN touch ui/dist/node_modules.marker
 RUN touch ui/dist/app/index.html
 RUN . hack/image_arch.sh && make argo-server.crt argo-server.key dist/argo-${IMAGE_OS}-${IMAGE_ARCH}
-RUN . hack/image_arch.sh && ./dist/argo-${IMAGE_OS}-${IMAGE_ARCH} version 2>&1 | grep clean
+#RUN . hack/image_arch.sh && ./dist/argo-${IMAGE_OS}-${IMAGE_ARCH} version 2>&1 | grep clean
 
 ####################################################################################################
 # argoexec
 ####################################################################################################
-FROM argoexec-base as argoexec
-ARG IMAGE_OS=linux
-COPY --from=argo-build /go/src/github.com/argoproj/argo/dist/argoexec-${IMAGE_OS}-* /usr/local/bin/argoexec
-ENTRYPOINT [ "argoexec" ]
+#FROM argoexec-base as argoexec
+#ARG IMAGE_OS=linux
+#COPY --from=argo-build /go/src/github.com/argoproj/argo/dist/argoexec-${IMAGE_OS}-* /usr/local/bin/argoexec
+#ENTRYPOINT [ "argoexec" ]
 
 ####################################################################################################
 # workflow-controller
 ####################################################################################################
-FROM scratch as workflow-controller
-USER 8737
-ARG IMAGE_OS=linux
-# Add timezone data
-COPY --from=argo-build /usr/share/zoneinfo /usr/share/zoneinfo
-COPY --from=argo-build /go/src/github.com/argoproj/argo/dist/workflow-controller-${IMAGE_OS}-* /bin/workflow-controller
-ENTRYPOINT [ "workflow-controller" ]
+#FROM scratch as workflow-controller
+#USER 8737
+#ARG IMAGE_OS=linux
+## Add timezone data
+#COPY --from=argo-build /usr/share/zoneinfo /usr/share/zoneinfo
+#COPY --from=argo-build /go/src/github.com/argoproj/argo/dist/workflow-controller-${IMAGE_OS}-* /bin/workflow-controller
+#ENTRYPOINT [ "workflow-controller" ]
 
 ####################################################################################################
 # argocli
