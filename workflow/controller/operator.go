@@ -553,12 +553,14 @@ func (woc *wfOperationCtx) persistUpdates() {
 	// conflicts and therefore we log fewer warning messages.
 	case "", "true":
 		if err := woc.writeBackToInformer(); err != nil {
+			fmt.Println("if")
 			woc.markWorkflowError(err)
 			return
 		}
 	case "false":
 		time.Sleep(1 * time.Second)
 	}
+
 
 	// It is important that we *never* label pods as completed until we successfully updated the workflow
 	// Failing to do so means we can have inconsistent state.
@@ -700,6 +702,8 @@ func (woc *wfOperationCtx) requeue() {
 	woc.controller.wfQueue.AddRateLimited(key)
 }
 
+//TODO replica sucess
+
 // processNodeRetries updates the retry node state based on the child node state and the retry strategy and returns the node.
 func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrategy wfv1.RetryStrategy, opts *executeTemplateOpts) (*wfv1.NodeStatus, bool, error) {
 	if node.Fulfilled() {
@@ -817,15 +821,18 @@ func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrate
 	}
 
 	limit, err := intstr.Int32(retryStrategy.Limit)
+	replica, err := intstr.Int32(retryStrategy.Replicas)
 	if err != nil {
 		return nil, false, err
 	}
-	if retryStrategy.Limit != nil && limit != nil && int32(len(node.Children)) > *limit {
+	total_child := (*limit) *(*replica)
+	if retryStrategy.Limit != nil && limit != nil && int32(len(node.Children)) > total_child{
 		woc.log.Infoln("No more retries left. Failing...")
 		return woc.markNodePhase(node.Name, lastChildNode.Phase, "No more retries left"), true, nil
 	}
 
 	woc.log.Infof("%d child nodes of %s failed. Trying again...", len(node.Children), node.Name)
+
 	return node, true, nil
 }
 
@@ -1652,6 +1659,8 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 
 		woc.updated = wfUpdated
 	}
+	//TODO replica
+
 	// If the user has specified retries, node becomes a special retry node.
 	// This node acts as a parent of all retries that will be done for
 	// the container. The status of this node should be "Success" if any
@@ -1665,6 +1674,8 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 			retryParentNode = woc.initializeExecutableNode(retryNodeName, wfv1.NodeTypeRetry, templateScope, processedTmpl, orgTmpl, opts.boundaryID, wfv1.NodeRunning)
 		}
 		processedRetryParentNode, continueExecution, err := woc.processNodeRetries(retryParentNode, *woc.retryStrategy(processedTmpl), opts)
+		replica, err := intstr.Int(woc.retryStrategy(processedTmpl).Replicas)
+		rep := *replica
 		if err != nil {
 			return woc.markNodeError(retryNodeName, err), err
 		} else if !continueExecution {
@@ -1692,96 +1703,99 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 			nodeName = lastChildNode.Name
 			node = lastChildNode
 		} else {
-			// Create a new child node and append it to the retry node.
-			nodeName = fmt.Sprintf("%s(%d)", retryNodeName, len(retryParentNode.Children))
-			woc.addChildNode(retryNodeName, nodeName)
-			node = nil
+			//TODO Create a new child node and append it to the retry node.
+			for i := 0; i < *replica ; i++{
+				nodeName = fmt.Sprintf("%s(%d)(%d)", retryNodeName, len(retryParentNode.Children)/rep,i)
+				woc.addChildNode(retryNodeName, nodeName)
+				node = nil
 
-			localParams := make(map[string]string)
-			// Change the `pod.name` variable to the new retry node name
-			if processedTmpl.IsPodType() {
-				localParams[common.LocalVarPodName] = woc.wf.NodeID(nodeName)
+				localParams := make(map[string]string)
+				// Change the `pod.name` variable to the new retry node name
+				if processedTmpl.IsPodType() {
+					localParams[common.LocalVarPodName] = woc.wf.NodeID(nodeName)
+				}
+				// Inject the retryAttempt number
+				localParams[common.LocalVarRetries] = strconv.Itoa(len(retryParentNode.Children))
+
+				processedTmpl, err = common.SubstituteParams(processedTmpl, map[string]string{}, localParams)
+				if err != nil {
+					return woc.initializeNodeOrMarkError(node, nodeName, templateScope, orgTmpl, opts.boundaryID, err), err
+				}
+
+				switch processedTmpl.GetType() {
+				case wfv1.TemplateTypeContainer:
+					node, err = woc.executeContainer(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+				case wfv1.TemplateTypeSteps:
+					node, err = woc.executeSteps(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
+				case wfv1.TemplateTypeScript:
+					node, err = woc.executeScript(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+				case wfv1.TemplateTypeResource:
+					node, err = woc.executeResource(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+				case wfv1.TemplateTypeDAG:
+					node, err = woc.executeDAG(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
+				case wfv1.TemplateTypeSuspend:
+					node, err = woc.executeSuspend(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+				default:
+					err = errors.Errorf(errors.CodeBadRequest, "Template '%s' missing specification", processedTmpl.Name)
+					return woc.initializeNode(nodeName, wfv1.NodeTypeSkipped, templateScope, orgTmpl, opts.boundaryID, wfv1.NodeError, err.Error()), err
+				}
+				if err != nil {
+					node = woc.markNodeError(nodeName, err)
+
+					if processedTmpl.Synchronization != nil {
+						woc.controller.syncManager.Release(woc.wf, node.ID, processedTmpl.Synchronization)
+					}
+
+					// If retry policy is not set, or if it is not set to Always or OnError, we won't attempt to retry an errored container
+					// and we return instead.
+					retryStrategy := woc.retryStrategy(processedTmpl)
+					if retryStrategy == nil ||
+						(retryStrategy.RetryPolicy != wfv1.RetryPolicyAlways &&
+							retryStrategy.RetryPolicy != wfv1.RetryPolicyOnError) {
+						return node, err
+					}
+				}
+
+				if processedTmpl.Metrics != nil {
+					// Check if the node was just created, if it was emit realtime metrics.
+					// If the node did not previously exist, we can infer that it was created during the current operation, emit real time metrics.
+					if _, ok := woc.preExecutionNodePhases[node.ID]; !ok {
+						localScope, realTimeScope := woc.prepareMetricScope(node)
+						woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, true)
+					}
+					// Check if the node completed during this execution, if it did emit metrics
+					//
+					// This check is necessary because sometimes a node will be marked completed during the current execution and will
+					// not be considered again. The best example of this is the entrypoint steps/dag template (once completed, the
+					// workflow ends and it's not reconsidered). This checks makes sure that its metrics also get emitted.
+					//
+					// In this check, a completed node may or may not have existed prior to this execution. If it did exist, ensure that it wasn't
+					// completed before this execution. If it did not exist prior, then we can infer that it was completed during this execution.
+					// The statement "(!ok || !prevNodeStatus.Fulfilled())" checks for this behavior and represents the material conditional
+					// "ok -> !prevNodeStatus.Fulfilled()" (https://en.wikipedia.org/wiki/Material_conditional)
+					if prevNodeStatus, ok := woc.preExecutionNodePhases[node.ID]; (!ok || !prevNodeStatus.Fulfilled()) && node.Fulfilled() {
+						localScope, realTimeScope := woc.prepareMetricScope(node)
+						woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, false)
+					}
+				}
+
+				node = woc.wf.GetNodeByName(node.Name)
+
+				// Swap the node back to retry node
+				if retryNodeName != "" {
+					retryNode := woc.wf.GetNodeByName(retryNodeName)
+					if !retryNode.Fulfilled() && node.Fulfilled() { //if the retry child has completed we need to update outself
+						node, err = woc.executeTemplate(retryNodeName, orgTmpl, tmplCtx, args, opts)
+						if err != nil {
+							return woc.markNodeError(node.Name, err), err
+						}
+					}
+					node = retryNode
+				}
 			}
-			// Inject the retryAttempt number
-			localParams[common.LocalVarRetries] = strconv.Itoa(len(retryParentNode.Children))
-
-			processedTmpl, err = common.SubstituteParams(processedTmpl, map[string]string{}, localParams)
-			if err != nil {
-				return woc.initializeNodeOrMarkError(node, nodeName, templateScope, orgTmpl, opts.boundaryID, err), err
-			}
 		}
 	}
 
-	switch processedTmpl.GetType() {
-	case wfv1.TemplateTypeContainer:
-		node, err = woc.executeContainer(nodeName, templateScope, processedTmpl, orgTmpl, opts)
-	case wfv1.TemplateTypeSteps:
-		node, err = woc.executeSteps(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
-	case wfv1.TemplateTypeScript:
-		node, err = woc.executeScript(nodeName, templateScope, processedTmpl, orgTmpl, opts)
-	case wfv1.TemplateTypeResource:
-		node, err = woc.executeResource(nodeName, templateScope, processedTmpl, orgTmpl, opts)
-	case wfv1.TemplateTypeDAG:
-		node, err = woc.executeDAG(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
-	case wfv1.TemplateTypeSuspend:
-		node, err = woc.executeSuspend(nodeName, templateScope, processedTmpl, orgTmpl, opts)
-	default:
-		err = errors.Errorf(errors.CodeBadRequest, "Template '%s' missing specification", processedTmpl.Name)
-		return woc.initializeNode(nodeName, wfv1.NodeTypeSkipped, templateScope, orgTmpl, opts.boundaryID, wfv1.NodeError, err.Error()), err
-	}
-	if err != nil {
-		node = woc.markNodeError(nodeName, err)
-
-		if processedTmpl.Synchronization != nil {
-			woc.controller.syncManager.Release(woc.wf, node.ID, processedTmpl.Synchronization)
-		}
-
-		// If retry policy is not set, or if it is not set to Always or OnError, we won't attempt to retry an errored container
-		// and we return instead.
-		retryStrategy := woc.retryStrategy(processedTmpl)
-		if retryStrategy == nil ||
-			(retryStrategy.RetryPolicy != wfv1.RetryPolicyAlways &&
-				retryStrategy.RetryPolicy != wfv1.RetryPolicyOnError) {
-			return node, err
-		}
-	}
-
-	if processedTmpl.Metrics != nil {
-		// Check if the node was just created, if it was emit realtime metrics.
-		// If the node did not previously exist, we can infer that it was created during the current operation, emit real time metrics.
-		if _, ok := woc.preExecutionNodePhases[node.ID]; !ok {
-			localScope, realTimeScope := woc.prepareMetricScope(node)
-			woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, true)
-		}
-		// Check if the node completed during this execution, if it did emit metrics
-		//
-		// This check is necessary because sometimes a node will be marked completed during the current execution and will
-		// not be considered again. The best example of this is the entrypoint steps/dag template (once completed, the
-		// workflow ends and it's not reconsidered). This checks makes sure that its metrics also get emitted.
-		//
-		// In this check, a completed node may or may not have existed prior to this execution. If it did exist, ensure that it wasn't
-		// completed before this execution. If it did not exist prior, then we can infer that it was completed during this execution.
-		// The statement "(!ok || !prevNodeStatus.Fulfilled())" checks for this behavior and represents the material conditional
-		// "ok -> !prevNodeStatus.Fulfilled()" (https://en.wikipedia.org/wiki/Material_conditional)
-		if prevNodeStatus, ok := woc.preExecutionNodePhases[node.ID]; (!ok || !prevNodeStatus.Fulfilled()) && node.Fulfilled() {
-			localScope, realTimeScope := woc.prepareMetricScope(node)
-			woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, false)
-		}
-	}
-
-	node = woc.wf.GetNodeByName(node.Name)
-
-	// Swap the node back to retry node
-	if retryNodeName != "" {
-		retryNode := woc.wf.GetNodeByName(retryNodeName)
-		if !retryNode.Fulfilled() && node.Fulfilled() { //if the retry child has completed we need to update outself
-			node, err = woc.executeTemplate(retryNodeName, orgTmpl, tmplCtx, args, opts)
-			if err != nil {
-				return woc.markNodeError(node.Name, err), err
-			}
-		}
-		node = retryNode
-	}
 
 	return node, nil
 }
@@ -2592,6 +2606,28 @@ func (woc *wfOperationCtx) addChildNode(parent string, child string) {
 	woc.updated = true
 }
 
+//TODO replica childnodes
+
+func (woc *wfOperationCtx) addChildsNode(parent string, childs []string) {
+	parentID := woc.wf.NodeID(parent)
+	node, ok := woc.wf.Status.Nodes[parentID]
+	if !ok {
+		panic(fmt.Sprintf("parent node %s not initialized", parent))
+	}
+	for  _, child:= range childs{
+		childID := woc.wf.NodeID(child)
+		for _, nodeID := range node.Children {
+			if childID == nodeID {
+				// already exists
+				return
+			}
+		}
+		node.Children = append(node.Children, childID)
+		woc.wf.Status.Nodes[parentID] = node
+		woc.updated = true
+	}
+
+}
 // executeResource is runs a kubectl command against a manifest
 func (woc *wfOperationCtx) executeResource(nodeName string, templateScope string, tmpl *wfv1.Template, orgTmpl wfv1.TemplateReferenceHolder, opts *executeTemplateOpts) (*wfv1.NodeStatus, error) {
 

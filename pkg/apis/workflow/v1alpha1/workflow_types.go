@@ -351,7 +351,6 @@ type WorkflowSpec struct {
 	// RetryStrategy for all templates in the workflow.
 	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty" protobuf:"bytes,37,opt,name=retryStrategy"`
 
-	ReplicaStrategy *ReplicaStrategy `json:"replicaStrategy,omitempty" protobuf:"bytes,37,opt,name=replicaStrategy"`
 }
 
 // GetVolumeClaimGC returns the VolumeClaimGC that was defined in the workflow spec.  If none was provided, a default value is returned.
@@ -575,8 +574,6 @@ type Template struct {
 
 	// RetryStrategy describes how to retry a template when it fails
 	RetryStrategy *RetryStrategy `json:"retryStrategy,omitempty" protobuf:"bytes,22,opt,name=retryStrategy"`
-	//TODO replica
-	ReplicaStrategy *ReplicaStrategy `json:"replicaStrategy,omitempty" protobuf:"bytes,22,opt,name=replicaStrategy"`
 	// Parallelism limits the max total parallel pods that can execute at the same time within the
 	// boundaries of this template invocation. If additional steps/dag templates are invoked, the
 	// pods created by those templates will not be counted towards this total.
@@ -1266,6 +1263,8 @@ type RetryStrategy struct {
 	// Limit is the maximum number of attempts when retrying a container
 	Limit *intstr.IntOrString `json:"limit,omitempty" protobuf:"varint,1,opt,name=limit"`
 
+	Replicas *intstr.IntOrString `json:"replicas,omitempty" protobuf:"varint,1,opt,name=replicas"`
+
 	// RetryPolicy is a policy of NodePhase statuses that will be retried
 	RetryPolicy RetryPolicy `json:"retryPolicy,omitempty" protobuf:"bytes,2,opt,name=retryPolicy,casttype=RetryPolicy"`
 
@@ -1273,15 +1272,7 @@ type RetryStrategy struct {
 	Backoff *Backoff `json:"backoff,omitempty" protobuf:"bytes,3,opt,name=backoff,casttype=Backoff"`
 }
 
-//TODO repilca
-type ReplicaStrategy struct {
-	Limit *intstr.IntOrString `json:"limit,omitempty" protobuf:"varint,1,opt,name=limit"`
 
-	ReplicaPolicy ReplicaPolicy `json:"replicaPolicy,omitempty" protobuf:"bytes,2,opt,name=replicaPolicy,casttype=ReplicaPolicy"`
-
-	// Backoff is a backoff strategy
-	Backoff *Backoff `json:"backoff,omitempty" protobuf:"bytes,3,opt,name=backoff,casttype=Backoff"`
-}
 
 // The amount of requested resource * the duration that request was used.
 // This is represented as duration in seconds, so can be converted to and from

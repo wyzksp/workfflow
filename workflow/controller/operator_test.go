@@ -947,6 +947,7 @@ spec:
   - name: whalesay
     retryStrategy:
       limit: 10
+      replicas: 1
     container:
       image: docker/whalesay:latest
       command: [sh, -c]
@@ -975,6 +976,46 @@ func TestRetriesVariable(t *testing.T) {
 	}
 }
 
+var replicaTemplate = `
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  name: whalesay
+spec:
+  entrypoint: whalesay
+  templates:
+  - name: whalesay
+    retryStrategy:
+      limit: 20
+      replicas: 2
+    container:
+      image: docker/whalesay:latest
+      command: [sh, -c]
+      args: ["cowsay {{retries}}"]
+`
+
+func TestReplica(t *testing.T) {
+	wf := unmarshalWF(replicaTemplate)
+	cancel, controller := newController(wf)
+	defer cancel()
+	iterations := 4
+	for i := 1; i <= iterations; i++ {
+		woc := newWorkflowOperationCtx(wf, controller)
+		if i != 1 {
+			makePodsPhase(woc, apiv1.PodFailed)
+		}
+		woc.operate()
+		wf = woc.wf
+	}
+
+	pods, err := controller.kubeclientset.CoreV1().Pods("").List(metav1.ListOptions{})
+	if assert.NoError(t, err) && assert.Len(t, pods.Items, iterations*2) {
+		//for i := 1; i < iterations*2; i++ {
+		//	assert.Equal(t, fmt.Sprintf("cowsay %d", i), pods.Items[i].Spec.Containers[1].Args[0])
+		//}
+	}
+}
+
 var stepsRetriesVariableTemplate = `
 apiVersion: argoproj.io/v1alpha1
 kind: Workflow
@@ -986,6 +1027,7 @@ spec:
   - name: step-retry
     retryStrategy:
       limit: 10
+      replicas: 1	
     steps:
       - - name: whalesay-success
           arguments:
