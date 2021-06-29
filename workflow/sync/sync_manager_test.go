@@ -14,9 +14,9 @@ import (
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/yaml"
 
-	argoErr "github.com/wyzksp/workflow/errors"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	fakewfclientset "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
+	argoErr "github.com/argoproj/argo/errors"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	fakewfclientset "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
 )
 
 const configMap = `

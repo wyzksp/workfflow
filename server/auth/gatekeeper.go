@@ -20,12 +20,12 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
-	"github.com/wyzksp/workflow/pkg/client/clientset/versioned"
-	"github.com/wyzksp/workflow/server/auth/serviceaccount"
-	"github.com/wyzksp/workflow/server/auth/sso"
-	"github.com/wyzksp/workflow/server/auth/types"
-	"github.com/wyzksp/workflow/util/kubeconfig"
-	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/argoproj/argo/pkg/client/clientset/versioned"
+	"github.com/argoproj/argo/server/auth/serviceaccount"
+	"github.com/argoproj/argo/server/auth/sso"
+	"github.com/argoproj/argo/server/auth/types"
+	"github.com/argoproj/argo/util/kubeconfig"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 type ContextKey string

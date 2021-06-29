@@ -14,7 +14,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/wyzksp/workflow/util/flatten"
+	"github.com/argoproj/argo/util/flatten"
 )
 
 // Facade provides a adapter from GRPC interface, but uses HTTP to send the messages.

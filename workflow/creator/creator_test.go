@@ -9,10 +9,10 @@ import (
 
 	"gopkg.in/square/go-jose.v2/jwt"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/server/auth"
-	"github.com/wyzksp/workflow/server/auth/types"
-	"github.com/wyzksp/workflow/workflow/common"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/server/auth"
+	"github.com/argoproj/argo/server/auth/types"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 func TestLabel(t *testing.T) {

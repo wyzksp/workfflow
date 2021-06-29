@@ -1,4 +1,4 @@
-module github.com/wyzksp/workflow
+module github.com/argoproj/argo
 
 go 1.13
 

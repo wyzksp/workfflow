@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 
 	"github.com/prometheus/client_golang/prometheus"
 	dto "github.com/prometheus/client_model/go"

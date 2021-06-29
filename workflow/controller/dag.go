@@ -9,10 +9,10 @@ import (
 	"github.com/antonmedv/expr"
 	"github.com/valyala/fasttemplate"
 
-	"github.com/wyzksp/workflow/errors"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/templateresolution"
+	"github.com/argoproj/argo/errors"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/templateresolution"
 )
 
 // dagContext holds context information about this context's DAG

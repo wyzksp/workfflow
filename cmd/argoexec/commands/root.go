@@ -12,15 +12,15 @@ import (
 	"github.com/argoproj/pkg/cli"
 	kubecli "github.com/argoproj/pkg/kube/cli"
 
-	"github.com/wyzksp/workflow"
-	"github.com/wyzksp/workflow/util"
-	"github.com/wyzksp/workflow/util/cmd"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/executor"
-	"github.com/wyzksp/workflow/workflow/executor/docker"
-	"github.com/wyzksp/workflow/workflow/executor/k8sapi"
-	"github.com/wyzksp/workflow/workflow/executor/kubelet"
-	"github.com/wyzksp/workflow/workflow/executor/pns"
+	"github.com/argoproj/argo"
+	"github.com/argoproj/argo/util"
+	"github.com/argoproj/argo/util/cmd"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/executor"
+	"github.com/argoproj/argo/workflow/executor/docker"
+	"github.com/argoproj/argo/workflow/executor/k8sapi"
+	"github.com/argoproj/argo/workflow/executor/kubelet"
+	"github.com/argoproj/argo/workflow/executor/pns"
 )
 
 const (

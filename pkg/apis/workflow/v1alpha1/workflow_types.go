@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/wyzksp/workflow/util/slice"
+	"github.com/argoproj/argo/util/slice"
 
 	apiv1 "k8s.io/api/core/v1"
 	policyv1beta "k8s.io/api/policy/v1beta1"
@@ -1980,7 +1980,7 @@ type DAGTemplate struct {
 	// before failing the DAG itself.
 	// The FailFast flag default is true,  if set to false, it will allow a DAG to run all branches of the DAG to
 	// completion (either success or failure), regardless of the failed outcomes of branches in the DAG.
-	// More info and example about this feature at https://github.com/wyzksp/workflow/issues/1442
+	// More info and example about this feature at https://github.com/argoproj/argo/issues/1442
 	FailFast *bool `json:"failFast,omitempty" protobuf:"varint,3,opt,name=failFast"`
 }
 

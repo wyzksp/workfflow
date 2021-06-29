@@ -5,9 +5,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/wyzksp/workflow/pkg/apiclient/clusterworkflowtemplate"
-	workflowarchivepkg "github.com/wyzksp/workflow/pkg/apiclient/workflowarchive"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/pkg/apiclient/clusterworkflowtemplate"
+	workflowarchivepkg "github.com/argoproj/argo/pkg/apiclient/workflowarchive"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 )
 
 type ArchivedWorkflowsServiceClient = Facade

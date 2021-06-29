@@ -6,9 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"sigs.k8s.io/yaml"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/test"
-	"github.com/wyzksp/workflow/workflow/common"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/test"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 // TestStepsFailedRetries ensures a steps template will recognize exhausted retries

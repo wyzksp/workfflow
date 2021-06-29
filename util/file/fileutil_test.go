@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/wyzksp/workflow/util/file"
+	"github.com/argoproj/argo/util/file"
 )
 
 // TestCompressContentString ensures compressing then decompressing a content string works as expected

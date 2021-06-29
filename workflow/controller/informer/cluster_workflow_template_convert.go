@@ -7,8 +7,8 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/workflow/util"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/workflow/util"
 )
 
 // this function always tries to return a value, even if it is badly formed

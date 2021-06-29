@@ -10,9 +10,9 @@ import (
 	"upper.io/db.v3/mysql"
 	"upper.io/db.v3/postgresql"
 
-	"github.com/wyzksp/workflow/config"
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/util"
+	"github.com/argoproj/argo/config"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/util"
 )
 
 // CreateDBSession creates the dB session

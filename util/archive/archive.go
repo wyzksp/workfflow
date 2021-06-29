@@ -9,8 +9,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/util"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/util"
 )
 
 type flusher interface {

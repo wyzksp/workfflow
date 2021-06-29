@@ -19,13 +19,13 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/util/archive"
-	errorsutil "github.com/wyzksp/workflow/util/errors"
-	"github.com/wyzksp/workflow/workflow/common"
-	execcommon "github.com/wyzksp/workflow/workflow/executor/common"
-	argowait "github.com/wyzksp/workflow/workflow/executor/common/wait"
-	osspecific "github.com/wyzksp/workflow/workflow/executor/os-specific"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/util/archive"
+	errorsutil "github.com/argoproj/argo/util/errors"
+	"github.com/argoproj/argo/workflow/common"
+	execcommon "github.com/argoproj/argo/workflow/executor/common"
+	argowait "github.com/argoproj/argo/workflow/executor/common/wait"
+	osspecific "github.com/argoproj/argo/workflow/executor/os-specific"
 )
 
 type PNSExecutor struct {

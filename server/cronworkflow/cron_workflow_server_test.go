@@ -7,14 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/square/go-jose.v2/jwt"
 
-	cronworkflowpkg "github.com/wyzksp/workflow/pkg/apiclient/cronworkflow"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	wftFake "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
-	"github.com/wyzksp/workflow/server/auth"
-	"github.com/wyzksp/workflow/server/auth/types"
-	testutil "github.com/wyzksp/workflow/test/util"
-	"github.com/wyzksp/workflow/util/instanceid"
-	"github.com/wyzksp/workflow/workflow/common"
+	cronworkflowpkg "github.com/argoproj/argo/pkg/apiclient/cronworkflow"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	wftFake "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
+	"github.com/argoproj/argo/server/auth"
+	"github.com/argoproj/argo/server/auth/types"
+	testutil "github.com/argoproj/argo/test/util"
+	"github.com/argoproj/argo/util/instanceid"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 func Test_cronWorkflowServiceServer(t *testing.T) {

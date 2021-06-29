@@ -12,12 +12,12 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/wyzksp/workflow/cmd/argo/commands/client"
-	workflowpkg "github.com/wyzksp/workflow/pkg/apiclient/workflow"
+	"github.com/argoproj/argo/cmd/argo/commands/client"
+	workflowpkg "github.com/argoproj/argo/pkg/apiclient/workflow"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/util"
-	"github.com/wyzksp/workflow/workflow/packer"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/util"
+	"github.com/argoproj/argo/workflow/packer"
 )
 
 func NewWatchCommand() *cobra.Command {

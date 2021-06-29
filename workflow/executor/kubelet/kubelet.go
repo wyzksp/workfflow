@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"github.com/wyzksp/workflow/errors"
+	"github.com/argoproj/argo/errors"
 )
 
 type KubeletExecutor struct {

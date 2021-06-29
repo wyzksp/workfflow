@@ -5,8 +5,8 @@ import (
 
 	"google.golang.org/grpc"
 
-	cronworkflowpkg "github.com/wyzksp/workflow/pkg/apiclient/cronworkflow"
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	cronworkflowpkg "github.com/argoproj/argo/pkg/apiclient/cronworkflow"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 )
 
 type argoKubeCronWorkflowServiceClient struct {

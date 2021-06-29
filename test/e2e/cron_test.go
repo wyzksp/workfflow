@@ -17,9 +17,9 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/selection"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/test/e2e/fixtures"
-	"github.com/wyzksp/workflow/workflow/common"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/test/e2e/fixtures"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 type CronSuite struct {

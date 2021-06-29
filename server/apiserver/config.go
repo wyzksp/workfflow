@@ -1,8 +1,8 @@
 package apiserver
 
 import (
-	"github.com/wyzksp/workflow/config"
-	"github.com/wyzksp/workflow/server/auth/sso"
+	"github.com/argoproj/argo/config"
+	"github.com/argoproj/argo/server/auth/sso"
 )
 
 var emptyConfigFunc = func() interface{} { return &Config{} }

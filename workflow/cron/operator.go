@@ -15,15 +15,15 @@ import (
 	"k8s.io/apimachinery/pkg/util/wait"
 	"k8s.io/client-go/util/retry"
 
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/pkg/client/clientset/versioned"
-	typed "github.com/wyzksp/workflow/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
-	argoerr "github.com/wyzksp/workflow/util/errors"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/metrics"
-	"github.com/wyzksp/workflow/workflow/templateresolution"
-	"github.com/wyzksp/workflow/workflow/util"
-	"github.com/wyzksp/workflow/workflow/validate"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/pkg/client/clientset/versioned"
+	typed "github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
+	argoerr "github.com/argoproj/argo/util/errors"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/metrics"
+	"github.com/argoproj/argo/workflow/templateresolution"
+	"github.com/argoproj/argo/workflow/util"
+	"github.com/argoproj/argo/workflow/validate"
 )
 
 type cronWfOperationCtx struct {

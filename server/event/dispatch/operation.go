@@ -17,12 +17,12 @@ import (
 	"k8s.io/client-go/tools/record"
 	"k8s.io/client-go/util/retry"
 
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/server/auth"
-	"github.com/wyzksp/workflow/util/instanceid"
-	"github.com/wyzksp/workflow/util/labels"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/creator"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/server/auth"
+	"github.com/argoproj/argo/util/instanceid"
+	"github.com/argoproj/argo/util/labels"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/creator"
 )
 
 type Operation struct {

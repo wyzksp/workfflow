@@ -5,9 +5,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	clusterworkflowtmplpkg "github.com/wyzksp/workflow/pkg/apiclient/clusterworkflowtemplate"
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	grpcutil "github.com/wyzksp/workflow/util/grpc"
+	clusterworkflowtmplpkg "github.com/argoproj/argo/pkg/apiclient/clusterworkflowtemplate"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	grpcutil "github.com/argoproj/argo/util/grpc"
 )
 
 type errorTranslatingWorkflowClusterTemplateServiceClient struct {

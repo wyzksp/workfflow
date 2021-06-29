@@ -11,9 +11,9 @@ import (
 	"k8s.io/client-go/kubernetes"
 	restclient "k8s.io/client-go/rest"
 
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/workflow/common"
-	execcommon "github.com/wyzksp/workflow/workflow/executor/common"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/workflow/common"
+	execcommon "github.com/argoproj/argo/workflow/executor/common"
 )
 
 type k8sAPIClient struct {

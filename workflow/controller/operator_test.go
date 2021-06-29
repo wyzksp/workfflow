@@ -26,15 +26,15 @@ import (
 	k8stesting "k8s.io/client-go/testing"
 	"sigs.k8s.io/yaml"
 
-	"github.com/wyzksp/workflow/config"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/test"
-	testutil "github.com/wyzksp/workflow/test/util"
-	intstrutil "github.com/wyzksp/workflow/util/intstr"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/controller/cache"
-	hydratorfake "github.com/wyzksp/workflow/workflow/hydrator/fake"
-	"github.com/wyzksp/workflow/workflow/util"
+	"github.com/argoproj/argo/config"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/test"
+	testutil "github.com/argoproj/argo/test/util"
+	intstrutil "github.com/argoproj/argo/util/intstr"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/controller/cache"
+	hydratorfake "github.com/argoproj/argo/workflow/hydrator/fake"
+	"github.com/argoproj/argo/workflow/util"
 )
 
 // TestOperateWorkflowPanicRecover ensures we can recover from unexpected panics
@@ -947,7 +947,6 @@ spec:
   - name: whalesay
     retryStrategy:
       limit: 10
-      replicas: 1
     container:
       image: docker/whalesay:latest
       command: [sh, -c]

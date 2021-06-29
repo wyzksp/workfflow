@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
 )
 
 type LockKind string

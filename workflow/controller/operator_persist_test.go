@@ -8,11 +8,11 @@ import (
 	"github.com/stretchr/testify/mock"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/persist/sqldb/mocks"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/workflow/hydrator"
-	"github.com/wyzksp/workflow/workflow/packer"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/persist/sqldb/mocks"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/workflow/hydrator"
+	"github.com/argoproj/argo/workflow/packer"
 )
 
 func getMockDBCtx(expectedError error, largeWfSupport bool) (*mocks.OffloadNodeStatusRepo, hydrator.Interface) {

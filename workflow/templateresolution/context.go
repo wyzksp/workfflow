@@ -6,11 +6,11 @@ import (
 	apierr "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/wyzksp/workflow/errors"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
-	typed "github.com/wyzksp/workflow/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/argoproj/argo/errors"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
+	typed "github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 // maxResolveDepth is the limit of template reference resolution.

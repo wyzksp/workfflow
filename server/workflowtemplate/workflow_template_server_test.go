@@ -9,14 +9,14 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/fake"
 
-	workflowtemplatepkg "github.com/wyzksp/workflow/pkg/apiclient/workflowtemplate"
-	"github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	wftFake "github.com/wyzksp/workflow/pkg/client/clientset/versioned/fake"
-	"github.com/wyzksp/workflow/server/auth"
-	"github.com/wyzksp/workflow/server/auth/types"
-	testutil "github.com/wyzksp/workflow/test/util"
-	"github.com/wyzksp/workflow/util/instanceid"
-	"github.com/wyzksp/workflow/workflow/common"
+	workflowtemplatepkg "github.com/argoproj/argo/pkg/apiclient/workflowtemplate"
+	"github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	wftFake "github.com/argoproj/argo/pkg/client/clientset/versioned/fake"
+	"github.com/argoproj/argo/server/auth"
+	"github.com/argoproj/argo/server/auth/types"
+	testutil "github.com/argoproj/argo/test/util"
+	"github.com/argoproj/argo/util/instanceid"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 const unlabelled = `{

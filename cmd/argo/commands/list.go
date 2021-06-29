@@ -14,11 +14,11 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/selection"
 
-	"github.com/wyzksp/workflow/cmd/argo/commands/client"
-	workflowpkg "github.com/wyzksp/workflow/pkg/apiclient/workflow"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/util/printer"
-	"github.com/wyzksp/workflow/workflow/common"
+	"github.com/argoproj/argo/cmd/argo/commands/client"
+	workflowpkg "github.com/argoproj/argo/pkg/apiclient/workflow"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/util/printer"
+	"github.com/argoproj/argo/workflow/common"
 )
 
 type listFlags struct {

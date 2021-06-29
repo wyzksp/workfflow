@@ -31,27 +31,27 @@ import (
 	"k8s.io/utils/pointer"
 	"sigs.k8s.io/yaml"
 
-	"github.com/wyzksp/workflow/config"
-	"github.com/wyzksp/workflow/errors"
-	"github.com/wyzksp/workflow/pkg/apis/workflow"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/util"
-	envutil "github.com/wyzksp/workflow/util/env"
-	errorsutil "github.com/wyzksp/workflow/util/errors"
-	"github.com/wyzksp/workflow/util/intstr"
-	"github.com/wyzksp/workflow/util/resource"
-	"github.com/wyzksp/workflow/util/retry"
-	"github.com/wyzksp/workflow/workflow/common"
-	controllercache "github.com/wyzksp/workflow/workflow/controller/cache"
-	"github.com/wyzksp/workflow/workflow/controller/estimation"
-	"github.com/wyzksp/workflow/workflow/controller/indexes"
-	"github.com/wyzksp/workflow/workflow/metrics"
-	"github.com/wyzksp/workflow/workflow/progress"
-	argosync "github.com/wyzksp/workflow/workflow/sync"
-	"github.com/wyzksp/workflow/workflow/templateresolution"
-	wfutil "github.com/wyzksp/workflow/workflow/util"
-	"github.com/wyzksp/workflow/workflow/validate"
+	"github.com/argoproj/argo/config"
+	"github.com/argoproj/argo/errors"
+	"github.com/argoproj/argo/pkg/apis/workflow"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/pkg/client/clientset/versioned/typed/workflow/v1alpha1"
+	"github.com/argoproj/argo/util"
+	envutil "github.com/argoproj/argo/util/env"
+	errorsutil "github.com/argoproj/argo/util/errors"
+	"github.com/argoproj/argo/util/intstr"
+	"github.com/argoproj/argo/util/resource"
+	"github.com/argoproj/argo/util/retry"
+	"github.com/argoproj/argo/workflow/common"
+	controllercache "github.com/argoproj/argo/workflow/controller/cache"
+	"github.com/argoproj/argo/workflow/controller/estimation"
+	"github.com/argoproj/argo/workflow/controller/indexes"
+	"github.com/argoproj/argo/workflow/metrics"
+	"github.com/argoproj/argo/workflow/progress"
+	argosync "github.com/argoproj/argo/workflow/sync"
+	"github.com/argoproj/argo/workflow/templateresolution"
+	wfutil "github.com/argoproj/argo/workflow/util"
+	"github.com/argoproj/argo/workflow/validate"
 )
 
 // wfOperationCtx is the context for evaluation and operation of a single workflow
@@ -553,7 +553,6 @@ func (woc *wfOperationCtx) persistUpdates() {
 	// conflicts and therefore we log fewer warning messages.
 	case "", "true":
 		if err := woc.writeBackToInformer(); err != nil {
-			fmt.Println("if")
 			woc.markWorkflowError(err)
 			return
 		}
@@ -600,7 +599,7 @@ func (woc *wfOperationCtx) writeBackToInformer() error {
 }
 
 // persistWorkflowSizeLimitErr will fail a the workflow with an error when we hit the resource size limit
-// See https://github.com/wyzksp/workflow/issues/913
+// See https://github.com/argoproj/argo/issues/913
 func (woc *wfOperationCtx) persistWorkflowSizeLimitErr(wfClient v1alpha1.WorkflowInterface, err error) {
 	woc.wf = woc.orig.DeepCopy()
 	woc.markWorkflowError(err)
@@ -646,7 +645,7 @@ func (woc *wfOperationCtx) reapplyUpdate(wfClient v1alpha1.WorkflowInterface, no
 		// There is something about having informer indexers (introduced in v2.12) that means we are more likely to operate on the
 		// previous version of the workflow. This means under high load, a previously successful workflow could
 		// be operated on again. This can error (e.g. if any pod was deleted as part of clean-up). This check prevents that.
-		// https://github.com/wyzksp/workflow/issues/4798
+		// https://github.com/argoproj/argo/issues/4798
 		if currWf.Status.Fulfilled() {
 			return nil, fmt.Errorf("must never update completed workflows")
 		}
@@ -821,12 +820,19 @@ func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrate
 	}
 
 	limit, err := intstr.Int32(retryStrategy.Limit)
+	if err != nil {
+		return nil, false, err
+	}
 	replica, err := intstr.Int32(retryStrategy.Replicas)
 	if err != nil {
 		return nil, false, err
 	}
-	total_child := (*limit) *(*replica)
-	if retryStrategy.Limit != nil && limit != nil && int32(len(node.Children)) > total_child{
+	rep := int32(1)
+	if replica != nil{
+		rep = *replica
+	}
+	totalChild := (*limit) *(rep)
+	if retryStrategy.Limit != nil && limit != nil && int32(len(node.Children)) > totalChild {
 		woc.log.Infoln("No more retries left. Failing...")
 		return woc.markNodePhase(node.Name, lastChildNode.Phase, "No more retries left"), true, nil
 	}
@@ -1251,7 +1257,7 @@ func inferFailedReason(pod *apiv1.Pod) (wfv1.NodePhase, string) {
 	// init, main (annotated), main (exit code), wait, sidecars
 	for _, ctr := range pod.Status.InitContainerStatuses {
 		// Virtual Kubelet environment will not set the terminate on waiting container
-		// https://github.com/wyzksp/workflow/issues/3879
+		// https://github.com/argoproj/argo/issues/3879
 		// https://github.com/virtual-kubelet/virtual-kubelet/blob/7f2a02291530d2df14905702e6d51500dd57640a/node/sync.go#L195-L208
 		if ctr.State.Waiting != nil {
 			return wfv1.NodeError, fmt.Sprintf("Pod failed before %s container starts", ctr.Name)
@@ -1277,7 +1283,7 @@ func inferFailedReason(pod *apiv1.Pod) (wfv1.NodePhase, string) {
 	failMessages := make(map[string]string)
 	for _, ctr := range pod.Status.ContainerStatuses {
 		// Virtual Kubelet environment will not set the terminate on waiting container
-		// https://github.com/wyzksp/workflow/issues/3879
+		// https://github.com/argoproj/argo/issues/3879
 		// https://github.com/virtual-kubelet/virtual-kubelet/blob/7f2a02291530d2df14905702e6d51500dd57640a/node/sync.go#L195-L208
 
 		if ctr.State.Waiting != nil {
@@ -1675,7 +1681,10 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 		}
 		processedRetryParentNode, continueExecution, err := woc.processNodeRetries(retryParentNode, *woc.retryStrategy(processedTmpl), opts)
 		replica, err := intstr.Int(woc.retryStrategy(processedTmpl).Replicas)
-		rep := *replica
+		rep := 1
+		if replica != nil{
+			rep = *replica
+		}
 		if err != nil {
 			return woc.markNodeError(retryNodeName, err), err
 		} else if !continueExecution {
@@ -1704,7 +1713,7 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 			node = lastChildNode
 		} else {
 			//TODO Create a new child node and append it to the retry node.
-			for i := 0; i < *replica ; i++{
+			for i := 0; i < rep ; i++{
 				nodeName = fmt.Sprintf("%s(%d)(%d)", retryNodeName, len(retryParentNode.Children)/rep,i)
 				woc.addChildNode(retryNodeName, nodeName)
 				node = nil
@@ -1793,6 +1802,63 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 					node = retryNode
 				}
 			}
+		}
+	}else{
+		switch processedTmpl.GetType() {
+		case wfv1.TemplateTypeContainer:
+			node, err = woc.executeContainer(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+		case wfv1.TemplateTypeSteps:
+			node, err = woc.executeSteps(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
+		case wfv1.TemplateTypeScript:
+			node, err = woc.executeScript(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+		case wfv1.TemplateTypeResource:
+			node, err = woc.executeResource(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+		case wfv1.TemplateTypeDAG:
+			node, err = woc.executeDAG(nodeName, newTmplCtx, templateScope, processedTmpl, orgTmpl, opts)
+		case wfv1.TemplateTypeSuspend:
+			node, err = woc.executeSuspend(nodeName, templateScope, processedTmpl, orgTmpl, opts)
+		default:
+			err = errors.Errorf(errors.CodeBadRequest, "Template '%s' missing specification", processedTmpl.Name)
+			return woc.initializeNode(nodeName, wfv1.NodeTypeSkipped, templateScope, orgTmpl, opts.boundaryID, wfv1.NodeError, err.Error()), err
+		}
+		if err != nil {
+			node = woc.markNodeError(nodeName, err)
+
+			if processedTmpl.Synchronization != nil {
+				woc.controller.syncManager.Release(woc.wf, node.ID, processedTmpl.Synchronization)
+			}
+
+			// If retry policy is not set, or if it is not set to Always or OnError, we won't attempt to retry an errored container
+			// and we return instead.
+			retryStrategy := woc.retryStrategy(processedTmpl)
+			if retryStrategy == nil ||
+				(retryStrategy.RetryPolicy != wfv1.RetryPolicyAlways &&
+					retryStrategy.RetryPolicy != wfv1.RetryPolicyOnError) {
+				return node, err
+			}
+		}
+
+		if processedTmpl.Metrics != nil {
+			if _, ok := woc.preExecutionNodePhases[node.ID]; !ok {
+				localScope, realTimeScope := woc.prepareMetricScope(node)
+				woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, true)
+			}
+			if prevNodeStatus, ok := woc.preExecutionNodePhases[node.ID]; (!ok || !prevNodeStatus.Fulfilled()) && node.Fulfilled() {
+				localScope, realTimeScope := woc.prepareMetricScope(node)
+				woc.computeMetrics(processedTmpl.Metrics.Prometheus, localScope, realTimeScope, false)
+			}
+		}
+
+		node = woc.wf.GetNodeByName(node.Name)
+		if retryNodeName != "" {
+			retryNode := woc.wf.GetNodeByName(retryNodeName)
+			if !retryNode.Fulfilled() && node.Fulfilled() { //if the retry child has completed we need to update outself
+				node, err = woc.executeTemplate(retryNodeName, orgTmpl, tmplCtx, args, opts)
+				if err != nil {
+					return woc.markNodeError(node.Name, err), err
+				}
+			}
+			node = retryNode
 		}
 	}
 

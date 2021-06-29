@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/wyzksp/workflow/cmd/argo/commands/client"
-	workflowarchivepkg "github.com/wyzksp/workflow/pkg/apiclient/workflowarchive"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/util/printer"
+	"github.com/argoproj/argo/cmd/argo/commands/client"
+	workflowarchivepkg "github.com/argoproj/argo/pkg/apiclient/workflowarchive"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/util/printer"
 )
 
 func NewListCommand() *cobra.Command {

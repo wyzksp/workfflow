@@ -18,16 +18,16 @@ import (
 	apivalidation "k8s.io/apimachinery/pkg/util/validation"
 	"sigs.k8s.io/yaml"
 
-	"github.com/wyzksp/workflow/errors"
-	wfv1 "github.com/wyzksp/workflow/pkg/apis/workflow/v1alpha1"
-	"github.com/wyzksp/workflow/util"
-	"github.com/wyzksp/workflow/util/help"
-	"github.com/wyzksp/workflow/util/intstr"
-	"github.com/wyzksp/workflow/util/sorting"
-	"github.com/wyzksp/workflow/workflow/artifacts/hdfs"
-	"github.com/wyzksp/workflow/workflow/common"
-	"github.com/wyzksp/workflow/workflow/metrics"
-	"github.com/wyzksp/workflow/workflow/templateresolution"
+	"github.com/argoproj/argo/errors"
+	wfv1 "github.com/argoproj/argo/pkg/apis/workflow/v1alpha1"
+	"github.com/argoproj/argo/util"
+	"github.com/argoproj/argo/util/help"
+	"github.com/argoproj/argo/util/intstr"
+	"github.com/argoproj/argo/util/sorting"
+	"github.com/argoproj/argo/workflow/artifacts/hdfs"
+	"github.com/argoproj/argo/workflow/common"
+	"github.com/argoproj/argo/workflow/metrics"
+	"github.com/argoproj/argo/workflow/templateresolution"
 )
 
 // ValidateOpts provides options when linting

@@ -7,8 +7,8 @@ import (
 
 	"github.com/argoproj/pkg/errors"
 
-	"github.com/wyzksp/workflow/cmd/argo/commands/client"
-	"github.com/wyzksp/workflow/pkg/apiclient/clusterworkflowtemplate"
+	"github.com/argoproj/argo/cmd/argo/commands/client"
+	"github.com/argoproj/argo/pkg/apiclient/clusterworkflowtemplate"
 )
 
 // NewDeleteCommand returns a new instance of an `argo delete` command
