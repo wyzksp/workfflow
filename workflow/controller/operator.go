@@ -1712,6 +1712,7 @@ func (woc *wfOperationCtx) executeTemplate(nodeName string, orgTmpl wfv1.Templat
 			nodeName = lastChildNode.Name
 			node = lastChildNode
 		} else {
+			woc.log.Infof("Node %s has %d replicas", nodeName,rep)
 			//TODO Create a new child node and append it to the retry node.
 			for i := 0; i < rep ; i++{
 				nodeName = fmt.Sprintf("%s(%d)(%d)", retryNodeName, len(retryParentNode.Children)/rep,i)

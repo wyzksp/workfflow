@@ -1240,13 +1240,7 @@ const (
 	RetryPolicyOnError   RetryPolicy = "OnError"
 )
 
-type ReplicaPolicy string
 
-const (
-	ReplicaPolicyAlways ReplicaPolicy = "Always"
-	ReplicaPolicyOnFailure ReplicaPolicy = "OnFailure"
-	ReplicaPolicyOnError ReplicaPolicy = "OnError"
-)
 
 // Backoff is a backoff strategy to use within retryStrategy
 type Backoff struct {

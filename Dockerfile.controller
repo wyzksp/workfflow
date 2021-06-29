@@ -1,0 +1,76 @@
+####################################################################################################
+# Builder image
+# Initial stage which pulls prepares build dependencies and CLI tooling we need for our final image
+# Also used as the image in CI jobs so needs all dependencies
+####################################################################################################
+FROM golang:1.13.4 as builder
+ENV GOPROXY=https://goproxy.cn
+ARG IMAGE_OS=linux
+
+RUN  sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
+RUN apt-get update && apt-get --no-install-recommends install -y \
+    git \
+    make \
+    apt-utils \
+    apt-transport-https \
+    ca-certificates \
+    wget \
+    gcc \
+    zip && \
+    apt-get clean \
+    && rm -rf \
+        /var/lib/apt/lists/* \
+        /tmp/* \
+        /var/tmp/* \
+        /usr/share/man \
+        /usr/share/doc \
+        /usr/share/doc-base
+
+WORKDIR /tmp
+
+# Install docker
+ENV DOCKER_CHANNEL stable
+ENV DOCKER_VERSION 18.09.1
+
+RUN if [ "${IMAGE_OS}" = "linux" ]; then \
+        export IMAGE_ARCH=`uname -m`; \
+        if [ "${IMAGE_ARCH}" = "ppc64le" ] ||[ "${IMAGE_ARCH}" = "s390x" ]; then \
+	        wget -O docker.tgz https://download.docker.com/${IMAGE_OS}/static/${DOCKER_CHANNEL}/${IMAGE_ARCH}/docker-18.06.3-ce.tgz; \
+        else \
+            wget -O docker.tgz https://download.docker.com/${IMAGE_OS}/static/${DOCKER_CHANNEL}/${IMAGE_ARCH}/docker-${DOCKER_VERSION}.tgz; \
+        fi \
+    fi && \
+    tar --extract --file docker.tgz --strip-components 1 --directory /usr/local/bin/ && \
+    rm docker.tgz
+
+####################################################################################################
+# Argo Build stage which performs the actual build of Argo binaries
+####################################################################################################
+FROM builder as argo-build
+
+ARG IMAGE_OS=linux
+
+# Perform the build
+WORKDIR /go/src/github.com/argoproj/argo
+COPY . .
+# check we can use Git
+RUN git rev-parse HEAD
+
+# controller image
+RUN . hack/image_arch.sh && make dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH}
+#RUN . hack/image_arch.sh && ./dist/workflow-controller-${IMAGE_OS}-${IMAGE_ARCH} version | grep clean
+
+
+
+####################################################################################################
+# workflow-controller
+####################################################################################################
+FROM scratch as workflow-controller
+USER 8737
+ARG IMAGE_OS=linux
+# Add timezone data
+COPY --from=argo-build /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=argo-build /go/src/github.com/argoproj/argo/dist/workflow-controller-${IMAGE_OS}-* /bin/workflow-controller
+ENTRYPOINT [ "workflow-controller" ]
+
