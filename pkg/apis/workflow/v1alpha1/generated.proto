@@ -828,17 +828,19 @@ message ResourceTemplate {
   // ]
   repeated string flags = 7;
 }
-
+//TODO replicas
 // RetryStrategy provides controls on how to retry a workflow step
 message RetryStrategy {
   // Limit is the maximum number of attempts when retrying a container
   optional k8s.io.apimachinery.pkg.util.intstr.IntOrString limit = 1;
 
+  optional k8s.io.apimachinery.pkg.util.intstr.IntOrString replicas = 2;
+
   // RetryPolicy is a policy of NodePhase statuses that will be retried
-  optional string retryPolicy = 2;
+  optional string retryPolicy = 3;
 
   // Backoff is a backoff strategy
-  optional Backoff backoff = 3;
+  optional Backoff backoff = 4;
 }
 
 // S3Artifact is the location of an S3 artifact

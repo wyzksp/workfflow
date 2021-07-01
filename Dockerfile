@@ -49,7 +49,7 @@ RUN if [ "${IMAGE_OS}" = "linux" ]; then \
 # Used as the base for both the release and development version of argoexec
 ####################################################################################################
 FROM debian:10.3-slim as argoexec-base
-
+RUN  sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 ARG IMAGE_OS=linux
 
 # NOTE: kubectl version should be one minor version less than https://storage.googleapis.com/kubernetes-release/release/stable.txt

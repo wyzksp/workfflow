@@ -710,6 +710,15 @@ func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrate
 	}
 	lastChildNode := getChildNodeIndex(node, woc.wf.Status.Nodes, -1)
 
+	replica, err := intstr.Int(retryStrategy.Replicas)
+	if err != nil {
+		return nil, false, err
+	}
+	rep := int(1)
+	if replica != nil{
+		rep = *replica
+	}
+
 	if lastChildNode == nil {
 		return node, true, nil
 	}
@@ -719,11 +728,15 @@ func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrate
 		return node, true, nil
 	}
 
-	if !lastChildNode.FailedOrError() {
-		node.Outputs = lastChildNode.Outputs.DeepCopy()
-		woc.wf.Status.Nodes[node.ID] = *node
-		return woc.markNodePhase(node.Name, wfv1.NodeSucceeded), true, nil
+	for i:=0 ; i< rep;i++{
+		childNode := getChildNodeIndex(node,woc.wf.Status.Nodes, -1-i)
+		if !childNode.FailedOrError() {
+			node.Outputs = childNode.Outputs.DeepCopy()
+			woc.wf.Status.Nodes[node.ID] = *node
+			return woc.markNodePhase(node.Name, wfv1.NodeSucceeded), true, nil
+		}
 	}
+
 
 	if woc.execWf.Spec.Shutdown != "" || (woc.workflowDeadline != nil && time.Now().UTC().After(*woc.workflowDeadline)) {
 		var message string
@@ -823,15 +836,16 @@ func (woc *wfOperationCtx) processNodeRetries(node *wfv1.NodeStatus, retryStrate
 	if err != nil {
 		return nil, false, err
 	}
-	replica, err := intstr.Int32(retryStrategy.Replicas)
+	replica_2, err := intstr.Int32(retryStrategy.Replicas)
 	if err != nil {
 		return nil, false, err
 	}
-	rep := int32(1)
-	if replica != nil{
-		rep = *replica
+	rep_2 := int32(1)
+	if replica_2 != nil{
+		rep_2 = *replica_2
 	}
-	totalChild := (*limit) *(rep)
+
+	totalChild := (*limit) *(rep_2)
 	if retryStrategy.Limit != nil && limit != nil && int32(len(node.Children)) > totalChild {
 		woc.log.Infoln("No more retries left. Failing...")
 		return woc.markNodePhase(node.Name, lastChildNode.Phase, "No more retries left"), true, nil

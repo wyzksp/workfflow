@@ -6110,7 +6110,7 @@ func (m *RetryStrategy) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
-
+//TODO replicas
 func (m *RetryStrategy) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
@@ -6126,13 +6126,25 @@ func (m *RetryStrategy) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			i = encodeVarintGenerated(dAtA, i, uint64(size))
 		}
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x20
 	}
 	i -= len(m.RetryPolicy)
 	copy(dAtA[i:], m.RetryPolicy)
 	i = encodeVarintGenerated(dAtA, i, uint64(len(m.RetryPolicy)))
 	i--
-	dAtA[i] = 0x12
+	dAtA[i] = 0x1a
+	if m.Replicas != nil {
+		{
+			size, err := m.Replicas.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintGenerated(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x12
+	}
 	if m.Limit != nil {
 		{
 			size, err := m.Limit.MarshalToSizedBuffer(dAtA[:i])
@@ -9847,7 +9859,7 @@ func (m *ResourceTemplate) Size() (n int) {
 	}
 	return n
 }
-
+//TODO replicas
 func (m *RetryStrategy) Size() (n int) {
 	if m == nil {
 		return 0
@@ -9856,6 +9868,10 @@ func (m *RetryStrategy) Size() (n int) {
 	_ = l
 	if m.Limit != nil {
 		l = m.Limit.Size()
+		n += 1 + l + sovGenerated(uint64(l))
+	}
+	if m.Replicas != nil {
+		l = m.Replicas.Size()
 		n += 1 + l + sovGenerated(uint64(l))
 	}
 	l = len(m.RetryPolicy)
@@ -11586,12 +11602,14 @@ func (this *ResourceTemplate) String() string {
 	}, "")
 	return s
 }
+//TODO replcias
 func (this *RetryStrategy) String() string {
 	if this == nil {
 		return "nil"
 	}
 	s := strings.Join([]string{`&RetryStrategy{`,
 		`Limit:` + strings.Replace(fmt.Sprintf("%v", this.Limit), "IntOrString", "intstr.IntOrString", 1) + `,`,
+		`Replicas:` + strings.Replace(fmt.Sprintf("%v", this.Replicas), "IntOrString", "intstr.IntOrString", 1) + `,`,
 		`RetryPolicy:` + fmt.Sprintf("%v", this.RetryPolicy) + `,`,
 		`Backoff:` + strings.Replace(this.Backoff.String(), "Backoff", "Backoff", 1) + `,`,
 		`}`,
@@ -21647,6 +21665,7 @@ func (m *ResourceTemplate) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+//TODO replicas
 func (m *RetryStrategy) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -21714,6 +21733,42 @@ func (m *RetryStrategy) Unmarshal(dAtA []byte) error {
 			iNdEx = postIndex
 		case 2:
 			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Replicas", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowGenerated
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthGenerated
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Replicas == nil {
+				m.Replicas = &intstr.IntOrString{}
+			}
+			if err := m.Replicas.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field RetryPolicy", wireType)
 			}
 			var stringLen uint64
@@ -21744,8 +21799,8 @@ func (m *RetryStrategy) Unmarshal(dAtA []byte) error {
 			}
 			m.RetryPolicy = RetryPolicy(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
+		case 4:
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Backoff", wireType)
 			}
 			var msglen int

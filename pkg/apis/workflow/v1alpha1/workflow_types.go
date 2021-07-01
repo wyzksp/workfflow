@@ -1257,13 +1257,13 @@ type RetryStrategy struct {
 	// Limit is the maximum number of attempts when retrying a container
 	Limit *intstr.IntOrString `json:"limit,omitempty" protobuf:"varint,1,opt,name=limit"`
 
-	Replicas *intstr.IntOrString `json:"replicas,omitempty" protobuf:"varint,1,opt,name=replicas"`
+	Replicas *intstr.IntOrString `json:"replicas,omitempty" protobuf:"varint,2,opt,name=replicas"`
 
 	// RetryPolicy is a policy of NodePhase statuses that will be retried
-	RetryPolicy RetryPolicy `json:"retryPolicy,omitempty" protobuf:"bytes,2,opt,name=retryPolicy,casttype=RetryPolicy"`
+	RetryPolicy RetryPolicy `json:"retryPolicy,omitempty" protobuf:"bytes,3,opt,name=retryPolicy,casttype=RetryPolicy"`
 
 	// Backoff is a backoff strategy
-	Backoff *Backoff `json:"backoff,omitempty" protobuf:"bytes,3,opt,name=backoff,casttype=Backoff"`
+	Backoff *Backoff `json:"backoff,omitempty" protobuf:"bytes,4,opt,name=backoff,casttype=Backoff"`
 }
 
 
